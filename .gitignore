@@ -13,5 +13,6 @@ pyenv
 !/rust/apps/target/
 !/rust/apps/Cargo.lock
 *.rustfmt.toml
+/result
 /tools/boot.sig
 /target

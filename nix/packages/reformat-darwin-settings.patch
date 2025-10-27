@@ -1,0 +1,18 @@
+diff --git a/build.py b/build.py
+index b1a04a60..e86cb463 100644
+--- a/build.py
++++ b/build.py
+@@ -33,10 +33,10 @@ def build_firmware(environment, options, bin_type):
+ 
+     os.chdir(build_path)
+ 
++    cmd = 'cmake -G "Unix Makefiles" .. -DLIB_RUST_C=ON'
+     if platform.system() == 'Darwin':
+-        cmd = 'cmake -G "Unix Makefiles" .. -DLIB_RUST_C=ON -DCMAKE_C_COMPILER=/usr/bin/clang -DCMAKE_CXX_COMPILER=/usr/bin/clang++'
+-    else:
+-        cmd = 'cmake -G "Unix Makefiles" .. -DLIB_RUST_C=ON'
++        cmd += ' -DCMAKE_C_COMPILER=/usr/bin/clang'
++        cmd += ' -DCMAKE_CXX_COMPILER=/usr/bin/clang++'
+     if is_release:
+         cmd += ' -DBUILD_PRODUCTION=true'
+         cmd += ' -DRU_SUPPORT=true'

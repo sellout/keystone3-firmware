@@ -1,0 +1,49 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index b06c3fd0..dedc3dda 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -387,14 +387,9 @@ else()
+         # add framework for MacOS simulator to scan QR code
+         target_link_libraries(${PROJECT_NAME} PRIVATE "-framework CoreFoundation")
+         target_link_libraries(${PROJECT_NAME} PRIVATE "-framework CoreGraphics")
+-        
++
+         set(CODESIGN_IDENTITY "keystone simulator")
+         set(ENTITLEMENTS_FILE "${CMAKE_SOURCE_DIR}/entitlements.plist")
+         set(CODESIGN_COMMAND codesign --force --options runtime --entitlements ${ENTITLEMENTS_FILE} --sign "${CODESIGN_IDENTITY}")
+-        add_custom_command(TARGET ${PROJECT_NAME}
+-            POST_BUILD
+-            COMMAND ${CODESIGN_COMMAND} ${PROJECT_NAME}
+-            COMMENT "Signing the executable"
+-        )
+     endif()
+-endif()
+\ No newline at end of file
++endif()
+diff --git a/build.py b/build.py
+index e86cb463..00b03b8d 100644
+--- a/build.py
++++ b/build.py
+@@ -34,9 +34,6 @@ def build_firmware(environment, options, bin_type):
+     os.chdir(build_path)
+ 
+     cmd = 'cmake -G "Unix Makefiles" .. -DLIB_RUST_C=ON'
+-    if platform.system() == 'Darwin':
+-        cmd += ' -DCMAKE_C_COMPILER=/usr/bin/clang'
+-        cmd += ' -DCMAKE_CXX_COMPILER=/usr/bin/clang++'
+     if is_release:
+         cmd += ' -DBUILD_PRODUCTION=true'
+         cmd += ' -DRU_SUPPORT=true'
+diff --git a/rust/CMakeLists.txt b/rust/CMakeLists.txt
+index d537ab91..d48f7b09 100644
+--- a/rust/CMakeLists.txt
++++ b/rust/CMakeLists.txt
+@@ -61,7 +61,7 @@ message(STATUS "cargo build command: " ${CARGO_FLAG})
+ 
+ #run build
+ add_custom_target(rust_c ALL
+-    COMMAND rustup run nightly-2025-05-01 ${RUST_CARGO_EXECUTABLE} build ${CARGO_FLAG}
++    COMMAND ${RUST_CARGO_EXECUTABLE} build ${CARGO_FLAG}
+     COMMAND ${COPY_BUILD_TARGET}
+     COMMAND ${COPY_BINDINGS_TARGET}
+     WORKING_DIRECTORY ${RUST_DIR}
