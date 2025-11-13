@@ -45,6 +45,7 @@
         inputsFrom = nixpkgs.lib.attrValues self.packages.${system};
         packages = [
           pkgs.alejandra
+          pkgs.rust-analyzer
         ];
         ## TODO: This is because we can’t bypass a submodule with the flake’s
         ##       `submodules = true`.
