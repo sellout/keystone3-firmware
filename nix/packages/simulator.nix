@@ -31,7 +31,9 @@ in
       ## This can’t be sandboxed, because it uses Cargo to fetch dependencies.
       __noChroot = true;
 
-      buildInputs = [pkgs.SDL2];
+      buildInputs =
+        [pkgs.SDL2]
+        ++ lib.optional pkgs.stdenv.isLinux pkgs.xorg.libX11;
 
       nativeBuildInputs = [
         pkgs.cacert ## SSL certificates (wouldn’t need if this were sandboxed)
