@@ -33,7 +33,7 @@ in
 
       buildInputs =
         [pkgs.SDL2]
-        ++ lib.optional pkgs.stdenv.isLinux pkgs.xorg.libX11;
+        ++ lib.optional pkgs.stdenv.isLinux pkgs.xorg.libxcb;
 
       nativeBuildInputs = [
         pkgs.cacert ## SSL certificates (wouldn’t need if this were sandboxed)
@@ -54,9 +54,14 @@ in
         ./nix-only.patch
       ];
 
+      LD_LIBRARY_PATH = lib.makeLibraryPath [pkgs.xorg.libxcb];
+      
       dontConfigure = true;
 
       buildPhase = ''
+        echo ==============================
+        echo $LD_LIBRARY_PATH
+        echo ==============================
         runHook preBuild
         ## Since it calls Cargo directly, we have to give it someplace to put everything.
         CARGO_HOME=$TMPDIR/.cargo \
